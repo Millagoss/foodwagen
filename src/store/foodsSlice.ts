@@ -1,19 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export type Restaurant = {
-	id: string;
-	name: string;
-	logo: string;
-	status: "Open Now" | "Closed";
-};
-
-export type Food = {
-	id: string;
-	name: string;
-	rating: number;
-	image: string;
-	restaurant?: Restaurant | null;
-};
+import type { Food } from "../types/food";
 
 type RequestStatus = "idle" | "loading" | "succeeded" | "failed";
 
