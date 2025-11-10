@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useAppDispatch } from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
 import { openAdd } from "../store/uiSlice";
 
 export default function Header() {
   const dispatch = useAppDispatch();
+  const { globalLoading } = useAppSelector((s) => s.ui);
   return (
     <header
       className="food-header sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
@@ -26,7 +27,7 @@ export default function Header() {
  
 
         <div className="hidden md:block">
-          <button className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white" data-test-id="food-add-btn" onClick={() => dispatch(openAdd())}>
+          <button className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white disabled:opacity-60" data-test-id="food-add-btn" onClick={() => dispatch(openAdd())} disabled={globalLoading}>
             Add Meal
           </button>
         </div>

@@ -57,7 +57,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 	});
 
 	return (
-		<form onSubmit={submit} className="space-y-4" data-test-id="food-form">
+		<form onSubmit={submit} className="space-y-4" data-test-id="food-form" aria-busy={submitting}>
 			<div>
 				<label htmlFor="food_name" className="mb-1 block text-sm font-medium">
 					Food Name
@@ -68,6 +68,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					name="food_name"
 					className="food-input"
 					placeholder="Enter food name"
+					aria-invalid={!!errors.food_name}
 					aria-describedby={errors.food_name ? "food-name-error" : undefined}
 				/>
 				{errors.food_name && (
@@ -88,6 +89,10 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					type="number"
 					className="food-input"
 					placeholder="Enter food rating"
+					min={1}
+					max={5}
+					step={0.1}
+					aria-invalid={!!errors.food_rating}
 					aria-describedby={errors.food_rating ? "food-rating-error" : undefined}
 				/>
 				{errors.food_rating && (
@@ -107,6 +112,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					name="food_image"
 					className="food-input"
 					placeholder="Enter food image url"
+					aria-invalid={!!errors.food_image}
 					aria-describedby={errors.food_image ? "food-image-error" : undefined}
 				/>
 				{errors.food_image && (
@@ -126,6 +132,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					name="restaurant_name"
 					className="food-input"
 					placeholder="Enter restaurant name"
+					aria-invalid={!!errors.restaurant_name}
 					aria-describedby={errors.restaurant_name ? "restaurant-name-error" : undefined}
 				/>
 				{errors.restaurant_name && (
@@ -145,6 +152,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					name="restaurant_logo"
 					className="food-input"
 					placeholder="Enter restaurant logo url"
+					aria-invalid={!!errors.restaurant_logo}
 					aria-describedby={errors.restaurant_logo ? "restaurant-logo-error" : undefined}
 				/>
 				{errors.restaurant_logo && (
@@ -163,6 +171,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 					id="restaurant_status"
 					name="restaurant_status"
 					className="food-input"
+					aria-invalid={!!errors.restaurant_status}
 					aria-describedby={errors.restaurant_status ? "restaurant-status-error" : undefined}
 				>
 					<option value="Open Now">Open Now</option>
@@ -176,14 +185,17 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
 			</div>
 
 			<div className="mt-6 flex items-center justify-end gap-3">
-				<button type="button" className="food-btn border" onClick={onCancel}>
+				<button type="button" className="food-btn border" onClick={onCancel} disabled={submitting}>
 					Cancel
 				</button>
 				<button
 					type="submit"
-					className="food-btn bg-black text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-black"
+					className="food-btn inline-flex gap-2 bg-black text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-black"
 					disabled={submitting}
+					aria-busy={submitting}
+					data-test-id="food-submit-btn"
 				>
+					{submitting && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />}
 					{submitting ? (mode === "add" ? "Adding Food..." : "Updating Food...") : "Save"}
 				</button>
 			</div>

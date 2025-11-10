@@ -7,13 +7,13 @@ import SearchBar from "../components/SearchBar";
 import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
-import { closeAdd } from "../store/uiSlice";
+import { closeAdd, setGlobalLoading } from "../store/uiSlice";
 import { createFood } from "../lib/api/food";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
-  const { modalAddOpen } = useAppSelector((s) => s.ui);
+  const { modalAddOpen, globalLoading } = useAppSelector((s) => s.ui);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
@@ -38,7 +38,7 @@ export default function Home() {
       <SearchBar
         value={searchTerm}
         onDebouncedChange={(v) => dispatch(setSearchTerm(v))}
-        disabled={status === "loading"}
+        disabled={status === "loading" || globalLoading}
         error={error}
       />
 
@@ -66,19 +66,24 @@ export default function Home() {
           mode="add"
           onCancel={() => dispatch(closeAdd())}
           onSubmit={async (values: FoodFormValues) => {
-            await createFood({
-              name: values.food_name,
-              rating: values.food_rating,
-              image: values.food_image,
-              restaurant: {
-                name: values.restaurant_name,
-                logo: values.restaurant_logo,
-                status: values.restaurant_status,
-              },
-            });
-            const data = await listFoods();
-            dispatch(setItems(data));
-            dispatch(closeAdd());
+            try {
+              dispatch(setGlobalLoading(true));
+              await createFood({
+                name: values.food_name,
+                rating: values.food_rating,
+                image: values.food_image,
+                restaurant: {
+                  name: values.restaurant_name,
+                  logo: values.restaurant_logo,
+                  status: values.restaurant_status,
+                },
+              });
+              const data = await listFoods();
+              dispatch(setItems(data));
+              dispatch(closeAdd());
+            } finally {
+              dispatch(setGlobalLoading(false));
+            }
           }}
         />
       </Modal>
