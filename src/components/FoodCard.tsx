@@ -1,6 +1,10 @@
+\"use client\";
 import type { Food } from "../types/food";
+import { useAppDispatch } from "../store";
+import { openEdit, openDelete } from "../store/uiSlice";
 
 export default function FoodCard({ food }: { food: Food }) {
+  const dispatch = useAppDispatch();
   return (
     <article className="food-card food-hover food-animate-in">
       <div className="mb-3 aspect-video w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
@@ -24,6 +28,14 @@ export default function FoodCard({ food }: { food: Food }) {
             {food.restaurant?.status ?? "Closed"}
           </div>
         </div>
+      </div>
+      <div className="mt-4 flex items-center justify-end gap-2">
+        <button className="food-btn border text-sm" data-test-id="food-edit-btn" onClick={() => dispatch(openEdit(food.id))}>
+          Edit Food
+        </button>
+        <button className="food-btn bg-red-600 text-white text-sm hover:bg-red-700" data-test-id="food-delete-btn" onClick={() => dispatch(openDelete(food.id))}>
+          Delete Food
+        </button>
       </div>
     </article>
   );

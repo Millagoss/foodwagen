@@ -1,36 +1,24 @@
 "use client";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { setItems, setStatus, setError, setSearchTerm } from "../store/foodsSlice";
-import { listFoods, searchFoods } from "../lib/api/food";
+import { fetchFoods, setStatus, setError, setSearchTerm, createFoodThunk, updateFoodThunk, deleteFoodThunk } from "../store/foodsSlice";
 import SearchBar from "../components/SearchBar";
 import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
-import { closeAdd, setGlobalLoading } from "../store/uiSlice";
-import { createFood } from "../lib/api/food";
+import { closeAdd, closeEdit, closeDelete, setGlobalLoading } from "../store/uiSlice";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
-  const { modalAddOpen, globalLoading } = useAppSelector((s) => s.ui);
+  const { modalAddOpen, modalEditId, modalDeleteId, globalLoading } = useAppSelector((s) => s.ui);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
-    const run = async () => {
-      try {
-        const data = searchTerm.trim()
-          ? await searchFoods(searchTerm.trim())
-          : await listFoods();
-        dispatch(setItems(data));
-        dispatch(setStatus("succeeded"));
-        dispatch(setError(null));
-      } catch (e: any) {
-        dispatch(setError(e?.message ?? "Failed to load foods"));
-        dispatch(setStatus("failed"));
-      }
-    };
-    run();
+    dispatch(fetchFoods(searchTerm))
+      .unwrap()
+      .then(() => dispatch(setError(null)))
+      .catch((e) => dispatch(setError(e?.message ?? "Failed to load foods")));
   }, [dispatch, searchTerm]);
 
   return (
@@ -68,24 +56,92 @@ export default function Home() {
           onSubmit={async (values: FoodFormValues) => {
             try {
               dispatch(setGlobalLoading(true));
-              await createFood({
-                name: values.food_name,
-                rating: values.food_rating,
-                image: values.food_image,
-                restaurant: {
-                  name: values.restaurant_name,
-                  logo: values.restaurant_logo,
-                  status: values.restaurant_status,
-                },
-              });
-              const data = await listFoods();
-              dispatch(setItems(data));
+              await dispatch(
+                createFoodThunk({
+                  name: values.food_name,
+                  rating: values.food_rating,
+                  image: values.food_image,
+                  restaurant: {
+                    name: values.restaurant_name,
+                    logo: values.restaurant_logo,
+                    status: values.restaurant_status,
+                  },
+                }),
+              ).unwrap();
               dispatch(closeAdd());
             } finally {
               dispatch(setGlobalLoading(false));
             }
           }}
         />
+      </Modal>
+
+      <Modal
+        open={!!modalEditId}
+        onClose={() => dispatch(closeEdit())}
+        title="Edit Food"
+      >
+        {modalEditId && (
+          <FoodForm
+            mode="edit"
+            initial={items.find((f) => f.id === modalEditId)}
+            onCancel={() => dispatch(closeEdit())}
+            onSubmit={async (values: FoodFormValues) => {
+              try {
+                dispatch(setGlobalLoading(true));
+                await dispatch(
+                  updateFoodThunk({
+                    id: modalEditId,
+                    payload: {
+                      name: values.food_name,
+                      rating: values.food_rating,
+                      image: values.food_image,
+                      restaurant: {
+                        name: values.restaurant_name,
+                        logo: values.restaurant_logo,
+                        status: values.restaurant_status,
+                      },
+                    },
+                  }),
+                ).unwrap();
+                dispatch(closeEdit());
+              } finally {
+                dispatch(setGlobalLoading(false));
+              }
+            }}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        open={!!modalDeleteId}
+        onClose={() => dispatch(closeDelete())}
+        title="Delete Food"
+      >
+        <div className="space-y-4">
+          <p>Are you sure you want to delete this food?</p>
+          <div className="flex items-center justify-end gap-2">
+            <button className="food-btn border" onClick={() => dispatch(closeDelete())}>
+              Cancel
+            </button>
+            <button
+              className="food-btn bg-red-600 text-white"
+              onClick={async () => {
+                if (!modalDeleteId) return;
+                try {
+                  dispatch(setGlobalLoading(true));
+                  await dispatch(deleteFoodThunk(modalDeleteId)).unwrap();
+                  dispatch(closeDelete());
+                } finally {
+                  dispatch(setGlobalLoading(false));
+                }
+              }}
+              data-test-id="food-confirm-delete-btn"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </Modal>
     </main>
   );
