@@ -5,10 +5,15 @@ import { setItems, setStatus, setError, setSearchTerm } from "../store/foodsSlic
 import { listFoods, searchFoods } from "../lib/api/food";
 import SearchBar from "../components/SearchBar";
 import FoodList from "../components/FoodList";
+import Modal from "../components/Modal";
+import FoodForm, { type FoodFormValues } from "../components/FoodForm";
+import { closeAdd } from "../store/uiSlice";
+import { createFood } from "../lib/api/food";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
+  const { modalAddOpen } = useAppSelector((s) => s.ui);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
@@ -51,6 +56,32 @@ export default function Home() {
       )}
 
       <FoodList items={items} />
+
+      <Modal
+        open={modalAddOpen}
+        onClose={() => dispatch(closeAdd())}
+        title="Add Food"
+      >
+        <FoodForm
+          mode="add"
+          onCancel={() => dispatch(closeAdd())}
+          onSubmit={async (values: FoodFormValues) => {
+            await createFood({
+              name: values.food_name,
+              rating: values.food_rating,
+              image: values.food_image,
+              restaurant: {
+                name: values.restaurant_name,
+                logo: values.restaurant_logo,
+                status: values.restaurant_status,
+              },
+            });
+            const data = await listFoods();
+            dispatch(setItems(data));
+            dispatch(closeAdd());
+          }}
+        />
+      </Modal>
     </main>
   );
 }
