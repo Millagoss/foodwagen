@@ -1,4 +1,5 @@
-\"use client\";
+ "use client";
+ 
 import type { Food } from "../types/food";
 import { useAppDispatch } from "../store";
 import { openEdit, openDelete } from "../store/uiSlice";
