@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setItems, setStatus, setError, setSearchTerm } from "../store/foodsSlice";
 import { listFoods, searchFoods } from "../lib/api/food";
@@ -10,7 +9,6 @@ import FoodList from "../components/FoodList";
 export default function Home() {
   const dispatch = useAppDispatch();
   const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
