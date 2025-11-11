@@ -26,20 +26,24 @@ export default function Hero() {
               Within a few clicks, find meals that are accessible near you
             </p>
 
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-4 mb-6">
                 <button
-                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-full ${heroMode === "Delivery" ? "bg-red-100 text-red-600" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"}`}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Delivery" ? "bg-red-100 text-amber-600" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"}`}
                   onClick={() => setHeroMode("Delivery")}
                 >
-                  <span className="text-base">🚴</span>
+                  <span className="text-base">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-motorbike"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M19 16m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M7.5 14h5l4 -4h-10.5m1.5 4l4 -4" /><path d="M13 6h2l1.5 3l2 4" /></svg>
+                  </span>
                   <span>Delivery</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-full ${heroMode === "Pickup" ? "bg-red-100 text-red-600 dark:bg-red-900/50" : "text-gray-600 dark:text-gray-800 cursor-pointer"}`}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Pickup" ? "bg-red-100 text-red-600 dark:bg-red-900/50" : "text-gray-600 cursor-pointer"}`}
                   onClick={() => setHeroMode("Pickup")}
                 >
-                  <span className="text-base">🛍</span>
+                  <span className="text-base">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /></svg>
+                  </span>
                   <span>Pickup</span>
                 </button>
               </div>
@@ -66,8 +70,8 @@ export default function Hero() {
                   onClick={() => dispatch(setSearchTerm(heroQuery))}
                   disabled={globalLoading}
                 >
-                  <span className="text-base">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                  <span className="text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                   </span>
                   <span>Find Meal</span>
                 </button>

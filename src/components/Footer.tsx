@@ -5,9 +5,9 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#212121] text-neutral-600 dark:bg-background-dark dark:text-neutral-300">
-      <div className="container mx-auto px-36 py-10">
-        <div className="flex justify-between">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container mx-auto px-4 py-10 sm:px-8 md:px-16 lg:px-24 xl:px-36">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="mb-4 text-md font-bold text-neutral-800 dark:text-white">
               Company
@@ -120,7 +120,7 @@ export default function Footer() {
             </ul>
           </div>
 </div>
-          <div>
+          <div className="lg:min-w-[320px]">
             <h3 className="mb-4 text-md font-bold text-neutral-500">
               FOLLOW US
             </h3>
@@ -177,7 +177,7 @@ export default function Footer() {
               </Link>
             </div>
             <p className="mb-4">Receive exclusive offers in your mailbox</p>
-            <form className="flex w-full max-w-sm gap-2">
+            <form className="flex w-full max-w-sm flex-col gap-2 sm:flex-row">
               <div className="relative grow">
                 <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
                   <svg
@@ -200,7 +200,7 @@ export default function Footer() {
                 />
               </div>
               <button
-                className="food-btn shadow-[0px_10px_15px] shadow-amber-300/40"
+                className="food-btn shadow-[0px_10px_15px] shadow-amber-300/40 whitespace-nowrap"
                 type="submit"
               >
                 Subscribe
