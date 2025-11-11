@@ -16,6 +16,7 @@ import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
 import SkeletonCard from "../components/SkeletonCard";
+import Hero from "../components/Hero";
 import {
   closeAdd,
   closeEdit,
@@ -40,12 +41,7 @@ export default function Home() {
 
   return (
     <main className="food-container py-10">
-      <SearchBar
-        value={searchTerm}
-        onDebouncedChange={(v) => dispatch(setSearchTerm(v))}
-        disabled={globalLoading}
-        error={error}
-      />
+      <Hero />
 
       {(status === "loading" || (status === "idle" && items.length === 0)) && (
         <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
