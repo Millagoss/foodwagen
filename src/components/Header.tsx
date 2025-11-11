@@ -13,7 +13,11 @@ export default function Header() {
       data-test-id="food-header"
     >
       <div className="food-container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2" aria-label="FoodWagen Home">
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          aria-label="FoodWagen Home"
+        >
           <Image
             src="/landing/header/Logo.png"
             alt="FoodWagen"
@@ -22,12 +26,18 @@ export default function Header() {
             className="h-7 w-7"
             priority
           />
-          <span className="text-lg font-semibold tracking-tight">FoodWagen</span>
+          <span className="text-lg font-semibold tracking-tight">
+            FoodWagen
+          </span>
         </Link>
- 
 
         <div className="hidden md:block">
-          <button className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white disabled:opacity-60" data-test-id="food-add-btn" onClick={() => dispatch(openAdd())} disabled={globalLoading}>
+          <button
+            className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white disabled:opacity-60"
+            data-test-id="food-add-btn"
+            onClick={() => dispatch(openAdd())}
+            disabled={globalLoading}
+          >
             Add Meal
           </button>
         </div>
@@ -43,5 +53,3 @@ export default function Header() {
     </header>
   );
 }
-
-

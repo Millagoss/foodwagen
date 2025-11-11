@@ -1,17 +1,31 @@
 "use client";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { fetchFoods, setStatus, setError, setSearchTerm, createFoodThunk, updateFoodThunk, deleteFoodThunk } from "../store/foodsSlice";
+import {
+  fetchFoods,
+  setStatus,
+  setError,
+  setSearchTerm,
+  createFoodThunk,
+  updateFoodThunk,
+  deleteFoodThunk,
+} from "../store/foodsSlice";
 import SearchBar from "../components/SearchBar";
 import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
-import { closeAdd, closeEdit, closeDelete, setGlobalLoading } from "../store/uiSlice";
+import {
+  closeAdd,
+  closeEdit,
+  closeDelete,
+  setGlobalLoading,
+} from "../store/uiSlice";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
-  const { modalAddOpen, modalEditId, modalDeleteId, globalLoading } = useAppSelector((s) => s.ui);
+  const { modalAddOpen, modalEditId, modalDeleteId, globalLoading } =
+    useAppSelector((s) => s.ui);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
@@ -121,7 +135,10 @@ export default function Home() {
         <div className="space-y-4">
           <p>Are you sure you want to delete this food?</p>
           <div className="flex items-center justify-end gap-2">
-            <button className="food-btn border" onClick={() => dispatch(closeDelete())}>
+            <button
+              className="food-btn border"
+              onClick={() => dispatch(closeDelete())}
+            >
               Cancel
             </button>
             <button

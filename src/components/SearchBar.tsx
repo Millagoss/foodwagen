@@ -5,11 +5,18 @@ type Props = {
   error?: string | null;
 };
 
-export default function SearchBar({ value, onDebouncedChange, disabled, error }: Props) {
+export default function SearchBar({
+  value,
+  onDebouncedChange,
+  disabled,
+  error,
+}: Props) {
   let timer: NodeJS.Timeout | undefined;
   return (
     <section className="mb-6">
-      <label htmlFor="food-search" className="sr-only">Search foods</label>
+      <label htmlFor="food-search" className="sr-only">
+        Search foods
+      </label>
       <input
         id="food-search"
         className="food-input max-w-xl"
@@ -23,9 +30,11 @@ export default function SearchBar({ value, onDebouncedChange, disabled, error }:
         disabled={disabled}
         aria-describedby={error ? "food-search-error" : undefined}
       />
-      {error && <div id="food-search-error" className="mt-2 text-sm text-red-600">{error}</div>}
+      {error && (
+        <div id="food-search-error" className="mt-2 text-sm text-red-600">
+          {error}
+        </div>
+      )}
     </section>
   );
 }
-
-
