@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 type Props = {
   value: string;
   onDebouncedChange: (v: string) => void;
@@ -11,9 +13,19 @@ export default function SearchBar({
   disabled,
   error,
 }: Props) {
-  const timerRef: { current: ReturnType<typeof setTimeout> | undefined } =
-    (globalThis as any).__foodSearchTimerRef ?? { current: undefined };
-  (globalThis as any).__foodSearchTimerRef = timerRef;
+  const [text, setText] = useState(value);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setText(value);
+  }, [value]);
+
+  function handleChange(v: string) {
+    setText(v);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => onDebouncedChange(v), 400);
+  }
+
   return (
     <section className="mb-6">
       <label htmlFor="food-search" className="sr-only">
@@ -23,12 +35,8 @@ export default function SearchBar({
         id="food-search"
         className="food-input max-w-xl"
         placeholder="Enter food name"
-        value={value}
-        onChange={(e) => {
-          const v = e.target.value;
-          if (timerRef.current) clearTimeout(timerRef.current);
-          timerRef.current = setTimeout(() => onDebouncedChange(v), 400);
-        }}
+        value={text}
+        onChange={(e) => handleChange(e.target.value)}
         disabled={disabled}
         aria-describedby={error ? "food-search-error" : undefined}
       />

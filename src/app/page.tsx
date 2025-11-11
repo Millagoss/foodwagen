@@ -40,7 +40,7 @@ export default function Home() {
       <SearchBar
         value={searchTerm}
         onDebouncedChange={(v) => dispatch(setSearchTerm(v))}
-        disabled={status === "loading" || globalLoading}
+        disabled={globalLoading}
         error={error}
       />
 
