@@ -6,6 +6,7 @@ import {
   setStatus,
   setError,
   setSearchTerm,
+  setPage,
   createFoodThunk,
   updateFoodThunk,
   deleteFoodThunk,
@@ -24,17 +25,18 @@ import {
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { items, status, error, searchTerm } = useAppSelector((s) => s.foods);
+  const { items, status, error, searchTerm, page, limit, hasMore } =
+    useAppSelector((s) => s.foods);
   const { modalAddOpen, modalEditId, modalDeleteId, globalLoading } =
     useAppSelector((s) => s.ui);
 
   useEffect(() => {
     dispatch(setStatus("loading"));
-    dispatch(fetchFoods(searchTerm))
+    dispatch(fetchFoods({ term: searchTerm, page, limit }))
       .unwrap()
       .then(() => dispatch(setError(null)))
       .catch((e) => dispatch(setError(e?.message ?? "Failed to load foods")));
-  }, [dispatch, searchTerm]);
+  }, [dispatch, searchTerm, page, limit]);
 
   return (
     <main className="food-container py-10">
@@ -45,7 +47,7 @@ export default function Home() {
         error={error}
       />
 
-      {status === "loading" && (
+      {(status === "loading" || (status === "idle" && items.length === 0)) && (
         <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
@@ -53,7 +55,7 @@ export default function Home() {
         </section>
       )}
 
-      {status !== "loading" && items.length === 0 && !error && (
+      {status !== "loading" && !(status === "idle" && items.length === 0) && items.length === 0 && !error && (
         <div className="empty-state-message text-zinc-600 dark:text-zinc-300">
           {searchTerm?.trim()
             ? `No results for "${searchTerm.trim()}"`
@@ -62,6 +64,16 @@ export default function Home() {
       )}
 
       <FoodList items={items} />
+      {hasMore && status !== "loading" && (
+        <div className="mt-6 flex justify-center">
+          <button
+            className="food-btn bg-black text-white dark:bg-zinc-100 dark:text-black"
+            onClick={() => dispatch(setPage(page + 1))}
+          >
+            Load More
+          </button>
+        </div>
+      )}
 
       <Modal
         open={modalAddOpen}

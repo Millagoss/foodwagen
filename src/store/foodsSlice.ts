@@ -15,6 +15,9 @@ type FoodsState = {
   status: RequestStatus;
   error: string | null;
   searchTerm: string;
+  page: number;
+  limit: number;
+  hasMore: boolean;
 };
 
 const initialState: FoodsState = {
@@ -22,14 +25,22 @@ const initialState: FoodsState = {
   status: "idle",
   error: null,
   searchTerm: "",
+  page: 1,
+  limit: 10,
+  hasMore: true,
 };
 
-export const fetchFoods = createAsyncThunk<Food[], string | undefined>(
+export const fetchFoods = createAsyncThunk<
+  Food[],
+  { term?: string; page?: number; limit?: number } | undefined
+>(
   "foods/fetch",
-  async (term) => {
-    const t = term?.trim();
-    if (t) return await apiSearch(t);
-    return await apiList();
+  async (args) => {
+    const t = args?.term?.trim();
+    const page = args?.page ?? 1;
+    const limit = args?.limit ?? 10;
+    if (t) return await apiSearch(t, { page, limit });
+    return await apiList({ page, limit });
   },
 );
 
@@ -62,6 +73,9 @@ const foodsSlice = createSlice({
     setItems(state, action: PayloadAction<Food[]>) {
       state.items = action.payload;
     },
+    appendItems(state, action: PayloadAction<Food[]>) {
+      state.items = [...state.items, ...action.payload];
+    },
     setStatus(state, action: PayloadAction<RequestStatus>) {
       state.status = action.payload;
     },
@@ -70,12 +84,23 @@ const foodsSlice = createSlice({
     },
     setSearchTerm(state, action: PayloadAction<string>) {
       state.searchTerm = action.payload;
+      state.page = 1;
+      state.hasMore = true;
+    },
+    setPage(state, action: PayloadAction<number>) {
+      state.page = action.payload;
+    },
+    setLimit(state, action: PayloadAction<number>) {
+      state.limit = action.payload;
     },
     reset(state) {
       state.items = [];
       state.status = "idle";
       state.error = null;
       state.searchTerm = "";
+      state.page = 1;
+      state.limit = 10;
+      state.hasMore = true;
     },
   },
   extraReducers: (builder) => {
@@ -85,8 +110,13 @@ const foodsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchFoods.fulfilled, (state, action) => {
-        state.items = action.payload;
+        if (state.page > 1) {
+          state.items = [...state.items, ...action.payload];
+        } else {
+          state.items = action.payload;
+        }
         state.status = "succeeded";
+        state.hasMore = action.payload.length >= state.limit;
       })
       .addCase(fetchFoods.rejected, (state, action) => {
         state.status = "failed";
@@ -105,6 +135,6 @@ const foodsSlice = createSlice({
   },
 });
 
-export const { setItems, setStatus, setError, setSearchTerm, reset } =
+export const { setItems, appendItems, setStatus, setError, setSearchTerm, setPage, setLimit, reset } =
   foodsSlice.actions;
 export default foodsSlice.reducer;

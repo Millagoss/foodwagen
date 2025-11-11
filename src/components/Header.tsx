@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "../store";
 import { openAdd } from "../store/uiSlice";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const dispatch = useAppDispatch();
@@ -31,13 +32,9 @@ export default function Header() {
           </span>
         </Link>
 
-        <div className="hidden md:block">
-          <button
-            className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white disabled:opacity-60"
-            data-test-id="food-add-btn"
-            onClick={() => dispatch(openAdd())}
-            disabled={globalLoading}
-          >
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
+          <button className="food-btn bg-black text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-black dark:hover:bg-white disabled:opacity-60" data-test-id="food-add-btn" onClick={() => dispatch(openAdd())} disabled={globalLoading}>
             Add Meal
           </button>
         </div>
