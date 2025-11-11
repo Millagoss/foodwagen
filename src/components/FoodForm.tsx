@@ -201,7 +201,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       <div className="mt-6 flex items-center justify-end gap-3">
         <button
           type="submit"
-          className="food-btn inline-flex w-full gap-2 bg-black text-white disabled:opacity-60"
+          className="food-btn inline-flex w-full py-4 gap-2 bg-black text-white disabled:opacity-60"
           disabled={submitting}
           aria-busy={submitting}
           data-test-id="food-submit-btn"
@@ -217,7 +217,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
         </button>
         <button
           type="button"
-          className="food-btn border bg-none border-amber-400 shadow-none text-black w-full"
+          className="food-btn border bg-none border-amber-400 shadow-none text-black w-full py-4"
           onClick={onCancel}
           disabled={submitting}
         >

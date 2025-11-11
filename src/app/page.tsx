@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   fetchFoods,
@@ -13,10 +13,12 @@ import {
   deleteFoodThunk,
 } from "../store/foodsSlice"; 
 import FoodList from "../components/FoodList";
-import Modal from "../components/Modal";
-import FoodForm, { type FoodFormValues } from "../components/FoodForm";
 import SkeletonCard from "../components/SkeletonCard";
 import Hero from "../components/Hero";
+
+const Modal = lazy(() => import("../components/Modal"));
+const FoodForm = lazy(() => import("../components/FoodForm"));
+import type { FoodFormValues } from "../components/FoodForm";
 import {
   closeAdd,
   closeEdit,
@@ -31,12 +33,87 @@ export default function Home() {
   const { modalAddOpen, modalEditId, modalDeleteId, globalLoading } =
     useAppSelector((s) => s.ui);
 
+  const handleLoadMore = useCallback(() => {
+    dispatch(setPage(page + 1));
+  }, [dispatch, page]);
+
+  const handleAddSubmit = useCallback(async (values: FoodFormValues) => {
+    try {
+      dispatch(setGlobalLoading(true));
+      await dispatch(
+        createFoodThunk({
+          name: values.food_name,
+          rating: values.food_rating,
+          image: values.food_image,
+          restaurant: {
+            name: values.restaurant_name,
+            logo: values.restaurant_logo,
+            status: values.restaurant_status,
+          },
+        }),
+      ).unwrap();
+      dispatch(closeAdd());
+    } finally {
+      dispatch(setGlobalLoading(false));
+    }
+  }, [dispatch]);
+
+  const editFood = useMemo(() => {
+    return modalEditId ? items.find((f) => f.id === modalEditId) : undefined;
+  }, [items, modalEditId]);
+
+  const handleEditSubmit = useCallback(async (values: FoodFormValues) => {
+    if (!modalEditId) return;
+    try {
+      dispatch(setGlobalLoading(true));
+      await dispatch(
+        updateFoodThunk({
+          id: modalEditId,
+          payload: {
+            name: values.food_name,
+            rating: values.food_rating,
+            image: values.food_image,
+            restaurant: {
+              name: values.restaurant_name,
+              logo: values.restaurant_logo,
+              status: values.restaurant_status,
+            },
+          },
+        }),
+      ).unwrap();
+      dispatch(closeEdit());
+    } finally {
+      dispatch(setGlobalLoading(false));
+    }
+  }, [dispatch, modalEditId]);
+
+  const handleDelete = useCallback(async () => {
+    if (!modalDeleteId) return;
+    try {
+      dispatch(setGlobalLoading(true));
+      await dispatch(deleteFoodThunk(modalDeleteId)).unwrap();
+      dispatch(closeDelete());
+    } finally {
+      dispatch(setGlobalLoading(false));
+    }
+  }, [dispatch, modalDeleteId]);
+
   useEffect(() => {
     dispatch(setStatus("loading"));
-    dispatch(fetchFoods({ term: searchTerm, page, limit }))
+    const promise = dispatch(fetchFoods({ term: searchTerm, page, limit }));
+    
+    promise
       .unwrap()
       .then(() => dispatch(setError(null)))
-      .catch((e) => dispatch(setError(e?.message ?? "Failed to load foods")));
+      .catch((e) => {
+        if (e?.name !== "AbortError") {
+          dispatch(setError(e?.message ?? "Failed to load foods"));
+        }
+      });
+
+    return () => {
+      promise.abort();
+    };
   }, [dispatch, searchTerm, page, limit]);
 
   return (
@@ -67,7 +144,7 @@ export default function Home() {
         <div className="mt-6 flex justify-center">
           <button
             className="food-btn inline-flex gap-2"
-            onClick={() => dispatch(setPage(page + 1))}
+            onClick={handleLoadMore}
             disabled={status === "loading"}
           >
             {status === "loading" && page > 1 && (
@@ -78,114 +155,70 @@ export default function Home() {
         </div>
       )}
 
-      <Modal
-        open={modalAddOpen}
-        onClose={() => dispatch(closeAdd())}
-        title="Add Food"
-      >
-        <FoodForm
-          mode="add"
-          onCancel={() => dispatch(closeAdd())}
-          onSubmit={async (values: FoodFormValues) => {
-            try {
-              dispatch(setGlobalLoading(true));
-              await dispatch(
-                createFoodThunk({
-                  name: values.food_name,
-                  rating: values.food_rating,
-                  image: values.food_image,
-                  restaurant: {
-                    name: values.restaurant_name,
-                    logo: values.restaurant_logo,
-                    status: values.restaurant_status,
-                  },
-                }),
-              ).unwrap();
-              dispatch(closeAdd());
-            } finally {
-              dispatch(setGlobalLoading(false));
-            }
-          }}
-        />
-      </Modal>
-
-      <Modal
-        open={!!modalEditId}
-        onClose={() => dispatch(closeEdit())}
-        title="Edit Food"
-      >
-        {modalEditId && (
+      <Suspense fallback={null}>
+        <Modal
+          open={modalAddOpen}
+          onClose={() => dispatch(closeAdd())}
+          title="Add Food"
+        >
           <FoodForm
-            mode="edit"
-            initial={items.find((f) => f.id === modalEditId)}
-            onCancel={() => dispatch(closeEdit())}
-            onSubmit={async (values: FoodFormValues) => {
-              try {
-                dispatch(setGlobalLoading(true));
-                await dispatch(
-                  updateFoodThunk({
-                    id: modalEditId,
-                    payload: {
-                      name: values.food_name,
-                      rating: values.food_rating,
-                      image: values.food_image,
-                      restaurant: {
-                        name: values.restaurant_name,
-                        logo: values.restaurant_logo,
-                        status: values.restaurant_status,
-                      },
-                    },
-                  }),
-                ).unwrap();
-                dispatch(closeEdit());
-              } finally {
-                dispatch(setGlobalLoading(false));
-              }
-            }}
+            mode="add"
+            onCancel={() => dispatch(closeAdd())}
+            onSubmit={handleAddSubmit}
           />
-        )}
-      </Modal>
+        </Modal>
+      </Suspense>
 
-      <Modal
-        open={!!modalDeleteId}
-        onClose={() => dispatch(closeDelete())}
-        title="Delete Meal"
-        className="max-w-2xl"
-      >
-        <div className="space-y-6"> 
-          <p className="text-base text-gray-500">Are you sure you want to delete this meal? Actions cannot be reversed.</p>
-          <div className="flex items-center justify-end gap-2">
-           
-            <button
-              className="food-btn w-full text-white py-4 inline-flex gap-2 justify-center"
-              onClick={async () => {
-                if (!modalDeleteId) return;
-                try {
-                  dispatch(setGlobalLoading(true));
-                  await dispatch(deleteFoodThunk(modalDeleteId)).unwrap();
-                  dispatch(closeDelete());
-                } finally {
-                  dispatch(setGlobalLoading(false));
-                }
-              }}
-              disabled={globalLoading}
-              data-test-id="food-confirm-delete-btn"
-            >
-              {globalLoading && (
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
-              )}
-              {globalLoading ? "Deleting Food..." : "Delete Food"}
-            </button>
-             <button
-              className="food-btn border w-full hover:bg-amber-100 bg-none border-amber-400 py-4 shadow-none text-black"
-              onClick={() => dispatch(closeDelete())}
-              disabled={globalLoading}
-            >
-              Cancel
-            </button>
+      <Suspense fallback={null}>
+        <Modal
+          open={!!modalEditId}
+          onClose={() => dispatch(closeEdit())}
+          title="Edit Food"
+        >
+          {editFood && (
+            <FoodForm
+              mode="edit"
+              initial={editFood}
+              onCancel={() => dispatch(closeEdit())}
+              onSubmit={handleEditSubmit}
+            />
+          )}
+        </Modal>
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <Modal
+          open={!!modalDeleteId}
+          onClose={() => dispatch(closeDelete())}
+          title="Delete Meal"
+          className="max-w-2xl"
+        >
+          <div className="space-y-6"> 
+            <p className="text-base text-gray-500">Are you sure you want to delete this meal? Actions cannot be reversed.</p>
+            <div className="flex items-center justify-end gap-2">
+             
+              <button
+                className="food-btn w-full text-white py-4 inline-flex gap-2 justify-center"
+                onClick={handleDelete}
+                disabled={globalLoading}
+                data-test-id="food-confirm-delete-btn"
+              >
+                {globalLoading && (
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+                )}
+                {globalLoading ? "Deleting Food..." : "Delete Food"}
+              </button>
+               <button
+                className="food-btn border w-full hover:bg-amber-100 bg-none border-amber-400 py-4 shadow-none text-black"
+                onClick={() => dispatch(closeDelete())}
+                disabled={globalLoading}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </Suspense>
       </main>
     </>
   );

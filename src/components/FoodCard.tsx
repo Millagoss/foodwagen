@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo, useCallback, useMemo } from "react";
 import type { Food } from "../types/food";
 import { useAppDispatch } from "../store";
 import { openEdit, openDelete } from "../store/uiSlice";
 
-export default function FoodCard({ food }: { food: Food }) {
+function FoodCard({ food }: { food: Food }) {
   const dispatch = useAppDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -19,12 +19,22 @@ export default function FoodCard({ food }: { food: Food }) {
     return () => document.removeEventListener("click", onDoc);
   }, [menuOpen]);
 
-  const price = (food as unknown as { price?: number })?.price;
-  const status = food.restaurant?.status ?? "Closed";
-  const statusClasses =
-    status === "Open Now"
-      ? "bg-emerald-100 text-emerald-700"
-      : "bg-orange-100 text-orange-700";
+  const price = useMemo(() => (food as unknown as { price?: number })?.price, [food]);
+  const status = useMemo(() => food.restaurant?.status ?? "Closed", [food.restaurant?.status]);
+  const statusClasses = useMemo(
+    () => (status === "Open Now" ? "bg-emerald-100 text-emerald-700" : "bg-orange-100 text-orange-700"),
+    [status]
+  );
+
+  const handleEdit = useCallback(() => {
+    setMenuOpen(false);
+    dispatch(openEdit(food.id));
+  }, [dispatch, food.id]);
+
+  const handleDelete = useCallback(() => {
+    setMenuOpen(false);
+    dispatch(openDelete(food.id));
+  }, [dispatch, food.id]);
 
   return (
     <article className="food-card p-0 py-2 food-hover food-animate-in bg-white">
@@ -38,6 +48,8 @@ export default function FoodCard({ food }: { food: Food }) {
           src={food.image || "/favicon.ico"}
           alt={food.name}
           className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -48,6 +60,8 @@ export default function FoodCard({ food }: { food: Food }) {
               src={food.restaurant.logo}
               alt={food.restaurant.name}
               className="restaurant-logo h-12 w-12 rounded-lg object-cover"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="restaurant-logo h-12 w-12 rounded-lg bg-zinc-200" />
@@ -81,20 +95,14 @@ export default function FoodCard({ food }: { food: Food }) {
               <button
                 className="block w-full rounded px-3 py-2 text-left hover:bg-zinc-100"
                 data-test-id="food-edit-btn"
-                onClick={() => {
-                  setMenuOpen(false);
-                  dispatch(openEdit(food.id));
-                }}
+                onClick={handleEdit}
               >
                 Edit
               </button>
               <button
                 className="block w-full rounded px-3 py-2 text-left text-red-600 hover:bg-red-50"
                 data-test-id="food-delete-btn"
-                onClick={() => {
-                  setMenuOpen(false);
-                  dispatch(openDelete(food.id));
-                }}
+                onClick={handleDelete}
               >
                 Delete
               </button>
@@ -111,3 +119,5 @@ export default function FoodCard({ food }: { food: Food }) {
     </article>
   );
 }
+
+export default memo(FoodCard);

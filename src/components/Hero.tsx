@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setSearchTerm } from "../store/foodsSlice";
 
-export default function Hero() {
+function Hero() {
   const dispatch = useAppDispatch();
   const { searchTerm } = useAppSelector((s) => s.foods);
   const { globalLoading } = useAppSelector((s) => s.ui);
@@ -14,6 +14,10 @@ export default function Hero() {
   useEffect(() => {
     setHeroQuery(searchTerm);
   }, [searchTerm]);
+
+  const handleSearch = useCallback(() => {
+    dispatch(setSearchTerm(heroQuery));
+  }, [dispatch, heroQuery]);
 
   useEffect(() => {
     if (heroQuery === "" && searchTerm !== "") {
@@ -77,7 +81,7 @@ export default function Hero() {
                 </div>
                 <button
                   className="w-full sm:w-auto focus-none flex-shrink-0 flex items-center justify-center gap-2 px-6 py-3 cursor-pointer bg-gradient-to-r from-red-400 to-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-orange-400 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-white transition-colors duration-200"
-                  onClick={() => dispatch(setSearchTerm(heroQuery))}
+                  onClick={handleSearch}
                   disabled={globalLoading}
                 >
                   <span className="text-sm">
@@ -103,5 +107,7 @@ export default function Hero() {
     </section>
   );
 }
+
+export default memo(Hero);
 
 

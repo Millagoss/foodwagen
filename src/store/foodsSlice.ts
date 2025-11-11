@@ -35,12 +35,12 @@ export const fetchFoods = createAsyncThunk<
   { term?: string; page?: number; limit?: number } | undefined
 >(
   "foods/fetch",
-  async (args) => {
+  async (args, { signal }) => {
     const t = args?.term?.trim();
     const page = args?.page ?? 1;
     const limit = args?.limit ?? 10;
-    if (t) return await apiSearch(t, { page, limit });
-    return await apiList({ page, limit });
+    if (t) return await apiSearch(t, { page, limit, signal });
+    return await apiList({ page, limit, signal });
   },
 );
 

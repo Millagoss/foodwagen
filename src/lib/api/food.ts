@@ -3,18 +3,19 @@ import type { CreateFoodDTO, Food, UpdateFoodDTO } from "../../types/food";
 
 const basePath = "/Food";
 
-type PageOpts = { page?: number; limit?: number };
+type PageOpts = { page?: number; limit?: number; signal?: AbortSignal };
 
 export async function listFoods(opts: PageOpts = {}): Promise<Food[]> {
-	const { page = 1, limit = 10 } = opts;
-	const { data } = await api.get<Food[]>(basePath, { params: { page, limit } });
+	const { page = 1, limit = 10, signal } = opts;
+	const { data } = await api.get<Food[]>(basePath, { params: { page, limit }, signal });
 	return data;
 }
 
 export async function searchFoods(name: string, opts: PageOpts = {}): Promise<Food[]> {
-	const { page = 1, limit = 10 } = opts;
+	const { page = 1, limit = 10, signal } = opts;
 	const { data } = await api.get<Food[]>(`${basePath}`, {
 		params: { name, page, limit },
+		signal,
 	});
 	return data;
 }
