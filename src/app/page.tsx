@@ -14,6 +14,7 @@ import SearchBar from "../components/SearchBar";
 import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
+import SkeletonCard from "../components/SkeletonCard";
 import {
   closeAdd,
   closeEdit,
@@ -45,10 +46,11 @@ export default function Home() {
       />
 
       {status === "loading" && (
-        <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" />
-          Loading...
-        </div>
+        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </section>
       )}
 
       {status !== "loading" && items.length === 0 && !error && (
