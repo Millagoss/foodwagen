@@ -35,7 +35,7 @@ export default function FoodCard({ food }: { food: Food }) {
           </span>
         )}
         <img
-          src={food.image || "/vercel.svg"}
+          src={food.image || "/favicon.ico"}
           alt={food.name}
           className="h-full w-full object-cover"
         />
