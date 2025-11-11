@@ -39,7 +39,7 @@ export default function Hero() {
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-4 mb-6">
                 <button
-                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Delivery" ? "bg-red-100 text-amber-600" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"}`}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Delivery" ? "bg-red-100 text-amber-600" : "text-gray-600 hover:bg-gray-100 cursor-pointer"}`}
                   onClick={() => setHeroMode("Delivery")}
                 >
                   <span className="text-base">
@@ -48,7 +48,7 @@ export default function Hero() {
                   <span>Delivery</span>
                 </button>
                 <button
-                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Pickup" ? "bg-red-100 text-red-600 dark:bg-red-900/50" : "text-gray-600 cursor-pointer"}`}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-full ${heroMode === "Pickup" ? "bg-red-100 text-red-600" : "text-gray-600 cursor-pointer"}`}
                   onClick={() => setHeroMode("Pickup")}
                 >
                   <span className="text-base">
@@ -76,7 +76,7 @@ export default function Hero() {
                   />
                 </div>
                 <button
-                  className="w-full sm:w-auto focus-none flex-shrink-0 flex items-center justify-center gap-2 px-6 py-3 cursor-pointer bg-gradient-to-r from-red-400 to-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-orange-400 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-white dark:focus:ring-offset-gray-800 transition-colors duration-200"
+                  className="w-full sm:w-auto focus-none flex-shrink-0 flex items-center justify-center gap-2 px-6 py-3 cursor-pointer bg-gradient-to-r from-red-400 to-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-orange-400 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-white transition-colors duration-200"
                   onClick={() => dispatch(setSearchTerm(heroQuery))}
                   disabled={globalLoading}
                 >

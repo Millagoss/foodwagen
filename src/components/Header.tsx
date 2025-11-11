@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "../store";
 import { openAdd } from "../store/uiSlice";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const dispatch = useAppDispatch();
@@ -33,7 +32,6 @@ export default function Header() {
         </Link>
 
         <div className="items-center gap-3 md:flex">
-          {/* <ThemeToggle /> */}
           <button className="food-btn" data-test-id="food-add-btn" onClick={() => dispatch(openAdd())} disabled={globalLoading}>
             Add Meal
           </button>

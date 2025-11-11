@@ -55,7 +55,7 @@ export default function Home() {
       )}
 
       {status !== "loading" && !(status === "idle" && items.length === 0) && items.length === 0 && !error && (
-        <div className="empty-state-message text-zinc-600 dark:text-zinc-300">
+        <div className="empty-state-message text-zinc-600">
           {searchTerm?.trim()
             ? `No results for "${searchTerm.trim()}"`
             : "No items available"}
