@@ -63,13 +63,17 @@ export default function Home() {
       )}
 
       <FoodList items={items} />
-      {hasMore && status !== "loading" && (
+      {hasMore && (
         <div className="mt-6 flex justify-center">
           <button
-            className="food-btn"
+            className="food-btn inline-flex gap-2"
             onClick={() => dispatch(setPage(page + 1))}
+            disabled={status === "loading"}
           >
-            Load More
+            {status === "loading" && page > 1 && (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+            )}
+            {status === "loading" && page > 1 ? "Loading..." : "Load More"}
           </button>
         </div>
       )}
@@ -153,7 +157,7 @@ export default function Home() {
           <div className="flex items-center justify-end gap-2">
            
             <button
-              className="food-btn w-full text-white py-4"
+              className="food-btn w-full text-white py-4 inline-flex gap-2 justify-center"
               onClick={async () => {
                 if (!modalDeleteId) return;
                 try {
@@ -164,13 +168,18 @@ export default function Home() {
                   dispatch(setGlobalLoading(false));
                 }
               }}
+              disabled={globalLoading}
               data-test-id="food-confirm-delete-btn"
             >
-              Yes
+              {globalLoading && (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+              )}
+              {globalLoading ? "Deleting..." : "Yes"}
             </button>
              <button
               className="food-btn border w-full hover:bg-amber-100 bg-none border-amber-400 py-4 shadow-none text-black"
               onClick={() => dispatch(closeDelete())}
+              disabled={globalLoading}
             >
               Cancel
             </button>

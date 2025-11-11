@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setSearchTerm } from "../store/foodsSlice";
 
@@ -10,6 +10,16 @@ export default function Hero() {
 
   const [heroMode, setHeroMode] = useState<"Delivery" | "Pickup">("Delivery");
   const [heroQuery, setHeroQuery] = useState(searchTerm);
+
+  useEffect(() => {
+    setHeroQuery(searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (heroQuery === "" && searchTerm !== "") {
+      dispatch(setSearchTerm(""));
+    }
+  }, [heroQuery, searchTerm, dispatch]);
 
   return (
     <section className="relative w-full min-h-[70vh] md:min-h-[500px] flex items-center overflow-hidden"

@@ -23,7 +23,7 @@ export default function Modal({ open, onClose, title, children, className }: Pro
 
   return (
     <div
-			className="fixed inset-0 z-50 flex items-center justify-center p-8"
+			className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-8"
       role="dialog"
       aria-modal="true"
     >
