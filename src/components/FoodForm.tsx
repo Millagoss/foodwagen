@@ -8,7 +8,7 @@ import type { Food, RestaurantStatus } from "../types/food";
 const schema = z.object({
   food_name: z.string().min(1, "Food Name is required"),
   food_rating: z
-    .number()
+    .number({ message: "Food Rating must be a number" })
     .min(1, "Food Rating must be between 1 and 5")
     .max(5, "Food Rating must be between 1 and 5"),
   food_image: z.string().url("Food Image URL is required"),
@@ -65,12 +65,15 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       aria-busy={submitting}
     >
       <div> 
+        <label htmlFor="food_name" className="sr-only">
+          Food Name
+        </label>
         <input
           {...register("food_name")}
           id="food_name"
           name="food_name"
           className="food-input"
-          placeholder="Food name"
+          placeholder="Enter food name"
           aria-invalid={!!errors.food_name}
           aria-describedby={errors.food_name ? "food-name-error" : undefined}
         />
@@ -82,13 +85,16 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       </div>
 
       <div> 
+        <label htmlFor="food_rating" className="sr-only">
+          Food Rating
+        </label>
         <input
           {...register("food_rating", { valueAsNumber: true })}
           id="food_rating"
           name="food_rating"
           type="number"
           className="food-input"
-          placeholder="Food rating"
+          placeholder="Enter food rating"
           min={1}
           max={5}
           step={0.1}
@@ -99,18 +105,21 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
         />
         {errors.food_rating && (
           <p id="food-rating-error" className="text-sm text-red-400">
-            Food Rating must be a number
+            {errors.food_rating.message || "Food Rating must be a number"}
           </p>
         )}
       </div>
 
       <div> 
+        <label htmlFor="food_image" className="sr-only">
+          Food Image URL
+        </label>
         <input
           {...register("food_image")}
           id="food_image"
           name="food_image"
           className="food-input"
-          placeholder="Food image (link)"
+          placeholder="Enter food image url"
           aria-invalid={!!errors.food_image}
           aria-describedby={errors.food_image ? "food-image-error" : undefined}
         />
@@ -122,6 +131,9 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       </div>
 
       <div> 
+        <label htmlFor="restaurant_name" className="sr-only">
+          Restaurant Name
+        </label>
         <input
           {...register("restaurant_name")}
           id="restaurant_name"
@@ -141,12 +153,15 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       </div>
 
       <div> 
+        <label htmlFor="restaurant_logo" className="sr-only">
+          Restaurant Logo URL
+        </label>
         <input
           {...register("restaurant_logo")}
           id="restaurant_logo"
           name="restaurant_logo"
           className="food-input"
-          placeholder="Restaurant logo (link)"
+          placeholder="Enter restaurant logo url"
           aria-invalid={!!errors.restaurant_logo}
           aria-describedby={
             errors.restaurant_logo ? "restaurant-logo-error" : undefined
@@ -160,6 +175,9 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
       </div>
 
       <div> 
+        <label htmlFor="restaurant_status" className="sr-only">
+          Restaurant Status
+        </label>
         <select
           {...register("restaurant_status")}
           id="restaurant_status"
@@ -175,7 +193,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
         </select>
         {errors.restaurant_status && (
           <p id="restaurant-status-error" className="text-sm text-red-400">
-            Restaurant Status must be ‘Open Now’ or ‘Closed’
+            Restaurant Status must be 'Open Now' or 'Closed'
           </p>
         )}
       </div>
@@ -195,7 +213,7 @@ export default function FoodForm({ initial, mode, onSubmit, onCancel }: Props) {
             ? mode === "add"
               ? "Adding Food..."
               : "Updating Food..."
-            : mode === "add" ? "Add" : "Update"}
+            : "Save"}
         </button>
         <button
           type="button"

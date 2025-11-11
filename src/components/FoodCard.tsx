@@ -30,7 +30,7 @@ export default function FoodCard({ food }: { food: Food }) {
     <article className="food-card p-0 py-2 food-hover food-animate-in bg-white">
       <div className="relative mb-3 h-[250px] w-full aspect-video rounded-xl overflow-hidden bg-zinc-100">
         {price != null && (
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-lg bg-orange-500 px-3 py-1 text-md font-semibold text-white shadow-md">
+          <span className="food-price absolute left-3 top-3 inline-flex items-center gap-1 rounded-lg bg-orange-500 px-3 py-1 text-md font-semibold text-white shadow-md">
             <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z" /></svg></span>${Number(price)?.toFixed(2)}
           </span>
         )}
@@ -56,6 +56,11 @@ export default function FoodCard({ food }: { food: Food }) {
             <h3 className="food-name truncate text-base font-semibold">
               {food.name}
             </h3>
+            {food.restaurant?.name && (
+              <p className="restaurant-name text-sm text-gray-600 truncate">
+                {food.restaurant.name}
+              </p>
+            )}
             <div className="mt-1 flex items-center gap-2 text-sm">
               <span>⭐</span>
               <span className="food-rating">{Number(food?.rating || 0).toFixed(1)}</span>

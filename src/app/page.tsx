@@ -174,7 +174,7 @@ export default function Home() {
               {globalLoading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
               )}
-              {globalLoading ? "Deleting..." : "Yes"}
+              {globalLoading ? "Deleting Food..." : "Delete Food"}
             </button>
              <button
               className="food-btn border w-full hover:bg-amber-100 bg-none border-amber-400 py-4 shadow-none text-black"

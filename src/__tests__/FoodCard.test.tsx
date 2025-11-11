@@ -27,6 +27,26 @@ test("delete button click sets modalDeleteId", () => {
       <FoodCard food={sample} />
     </Provider>,
   );
-  fireEvent.click(screen.getByRole("button", { name: /delete food/i }));
+  // First click the menu button to open the dropdown
+  const menuButton = screen.getByRole("button", { name: /open actions/i });
+  fireEvent.click(menuButton);
+  // Then click the delete button - query by data-test-id attribute
+  const deleteButton = screen.getByRole("button", { name: /delete/i });
+  fireEvent.click(deleteButton);
   expect(store.getState().ui.modalDeleteId).toBe("1");
+});
+
+test("edit button click sets modalEditId", () => {
+  render(
+    <Provider store={store}>
+      <FoodCard food={sample} />
+    </Provider>,
+  );
+  // First click the menu button to open the dropdown
+  const menuButton = screen.getByRole("button", { name: /open actions/i });
+  fireEvent.click(menuButton);
+  // Then click the edit button - query by role
+  const editButton = screen.getByRole("button", { name: /edit/i });
+  fireEvent.click(editButton);
+  expect(store.getState().ui.modalEditId).toBe("1");
 });
