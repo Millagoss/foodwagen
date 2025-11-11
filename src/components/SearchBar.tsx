@@ -11,7 +11,9 @@ export default function SearchBar({
   disabled,
   error,
 }: Props) {
-  let timer: NodeJS.Timeout | undefined;
+  const timerRef: { current: ReturnType<typeof setTimeout> | undefined } =
+    (globalThis as any).__foodSearchTimerRef ?? { current: undefined };
+  (globalThis as any).__foodSearchTimerRef = timerRef;
   return (
     <section className="mb-6">
       <label htmlFor="food-search" className="sr-only">
@@ -24,8 +26,8 @@ export default function SearchBar({
         value={value}
         onChange={(e) => {
           const v = e.target.value;
-          if (timer) clearTimeout(timer);
-          timer = setTimeout(() => onDebouncedChange(v), 300);
+          if (timerRef.current) clearTimeout(timerRef.current);
+          timerRef.current = setTimeout(() => onDebouncedChange(v), 400);
         }}
         disabled={disabled}
         aria-describedby={error ? "food-search-error" : undefined}

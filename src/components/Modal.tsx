@@ -26,7 +26,6 @@ export default function Modal({ open, onClose, title, children }: Props) {
       role="dialog"
       aria-modal="true"
     >
-			{/* overlay behind dialog */}
 			<div
 				className="absolute inset-0 bg-black/50"
 				onClick={onClose}
