@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
-:root {
+/* light by default */
+html:not(.dark) {
   --background: #ffffff;
-  --foreground: #ffffff;
+  --foreground: #171717;
+  color-scheme: light;
+}
+/* dark when .dark is on html */
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,10 +20,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* media preference still respected when user hasn't set a theme explicitly */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ededed;
+  html:not(.dark)[data-theme="system"] {
+    --background: #0a0a0a;
     --foreground: #ededed;
+    color-scheme: dark;
   }
 }
 

@@ -7,7 +7,7 @@ import { openEdit, openDelete } from "../store/uiSlice";
 export default function FoodCard({ food }: { food: Food }) {
   const dispatch = useAppDispatch();
   return (
-    <article className="food-card food-hover food-animate-in">
+    <article className="food-card food-hover food-animate-in bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
       <div className="mb-3 aspect-video w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
         <img
           src={food.image || "/vercel.svg"}
