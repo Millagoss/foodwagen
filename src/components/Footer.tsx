@@ -5,13 +5,14 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#212121] text-neutral-600 dark:bg-background-dark dark:text-neutral-300">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-36 py-10">
+        <div className="flex justify-between">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="mb-4 text-lg font-bold text-neutral-800 dark:text-white">
+            <h3 className="mb-4 text-md font-bold text-neutral-800 dark:text-white">
               Company
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   className="transition-colors duration-300 hover:text-primary"
@@ -48,10 +49,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-bold text-neutral-800 dark:text-white">
+            <h3 className="mb-4 text-md font-bold text-neutral-800 dark:text-white">
               Contact
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   className="transition-colors duration-300 hover:text-primary"
@@ -80,10 +81,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-bold text-neutral-800 dark:text-white">
+            <h3 className="mb-4 text-md font-bold text-neutral-800 dark:text-white">
               Legal
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   className="transition-colors duration-300 hover:text-primary"
@@ -118,9 +119,9 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
+</div>
           <div>
-            <h3 className="mb-4 text-lg font-bold text-neutral-800 dark:text-white">
+            <h3 className="mb-4 text-md font-bold text-neutral-500">
               FOLLOW US
             </h3>
             <div className="mb-6 flex space-x-4">
@@ -192,21 +193,23 @@ export default function Footer() {
                   </svg>
                 </span>
                 <input
-                  className="w-full rounded-l-md border border-neutral-300 bg-neutral-200 py-2.5 pl-10 pr-4 text-neutral-800 placeholder:text-neutral-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-200"
+                  className="w-full rounded-md border border-neutral-300 bg-neutral-200 py-2.5 pl-10 pr-4 text-neutral-800 placeholder:text-neutral-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-200"
                   placeholder="Enter Your email"
                   required
                   type="email"
                 />
               </div>
               <button
-                className="rounded-r-md bg-primary px-6 py-2.5 font-bold text-white transition-colors duration-300 hover:bg-amber-600"
+                className="food-btn shadow-[0px_10px_15px] shadow-amber-300/40"
                 type="submit"
               >
                 Subscribe
               </button>
             </form>
           </div>
+
         </div>
+        
 
         <div className="mt-12 flex flex-col items-center justify-between border-t border-neutral-200 pt-8 text-sm text-neutral-500 dark:border-neutral-700 dark:text-neutral-400 sm:flex-row">
           <p className="mb-4 sm:mb-0">

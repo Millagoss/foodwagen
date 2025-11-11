@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
@@ -10,8 +11,7 @@ import {
   createFoodThunk,
   updateFoodThunk,
   deleteFoodThunk,
-} from "../store/foodsSlice";
-import SearchBar from "../components/SearchBar";
+} from "../store/foodsSlice"; 
 import FoodList from "../components/FoodList";
 import Modal from "../components/Modal";
 import FoodForm, { type FoodFormValues } from "../components/FoodForm";
@@ -40,11 +40,14 @@ export default function Home() {
   }, [dispatch, searchTerm, page, limit]);
 
   return (
-    <main className="food-container py-10">
+    <>
       <Hero />
-
+      <main className="food-container pb-10">
+    <div className="my-16">
+       <h2 className="text-3xl font-bold text-center">Featured Meals</h2>
+    </div>
       {(status === "loading" || (status === "idle" && items.length === 0)) && (
-        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
@@ -63,7 +66,7 @@ export default function Home() {
       {hasMore && status !== "loading" && (
         <div className="mt-6 flex justify-center">
           <button
-            className="food-btn bg-black text-white dark:bg-zinc-100 dark:text-black"
+            className="food-btn"
             onClick={() => dispatch(setPage(page + 1))}
           >
             Load More
@@ -142,19 +145,15 @@ export default function Home() {
       <Modal
         open={!!modalDeleteId}
         onClose={() => dispatch(closeDelete())}
-        title="Delete Food"
+        title="Delete Meal"
+        className="max-w-2xl"
       >
-        <div className="space-y-4">
-          <p>Are you sure you want to delete this food?</p>
+        <div className="space-y-6"> 
+          <p className="text-base text-gray-500">Are you sure you want to delete this meal? Actions cannot be reversed.</p>
           <div className="flex items-center justify-end gap-2">
+           
             <button
-              className="food-btn border"
-              onClick={() => dispatch(closeDelete())}
-            >
-              Cancel
-            </button>
-            <button
-              className="food-btn bg-red-600 text-white"
+              className="food-btn w-full text-white py-4"
               onClick={async () => {
                 if (!modalDeleteId) return;
                 try {
@@ -167,11 +166,18 @@ export default function Home() {
               }}
               data-test-id="food-confirm-delete-btn"
             >
-              Delete
+              Yes
+            </button>
+             <button
+              className="food-btn border w-full hover:bg-amber-100 bg-none border-amber-400 py-4 shadow-none text-black"
+              onClick={() => dispatch(closeDelete())}
+            >
+              Cancel
             </button>
           </div>
         </div>
       </Modal>
-    </main>
+      </main>
+    </>
   );
 }

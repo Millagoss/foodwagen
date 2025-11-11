@@ -1,7 +1,7 @@
 export default function SkeletonCard() {
   return (
-    <article className="food-card">
-      <div className="mb-3 aspect-video w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 food-skeleton" />
+    <article className="food-card bg-white">
+      <div className="mb-3 aspect-video w-full overflow-hidden rounded-lg bg-zinc-100 food-skeleton" />
       <div className="h-4 w-1/2 food-skeleton rounded" />
       <div className="mt-3 flex items-center gap-3">
         <div className="restaurant-logo h-8 w-8 rounded-full food-skeleton" />
